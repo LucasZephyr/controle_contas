@@ -142,7 +142,7 @@ class SQL {
     function buscarContasBase(){
         $schema = $this->getSchema();
         $sql = "
-            SELECT * FROM {$schema}contas c where c.ativo = 1 and c.mes = '10' and c.ano = '2025' ORDER BY c.vencimento ASC
+            SELECT * FROM {$schema}contas c where c.ativo = 1 and c.mes = '09' and c.ano = '2025' ORDER BY c.vencimento ASC
         ";
 
         #echo '<pre>';print_r($sql);echo '</pre>';exit;
