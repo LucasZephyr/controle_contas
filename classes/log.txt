@@ -1,0 +1,4 @@
+
+/controle_contas/login.php##&ip:kubernetes.docker.internal&horario:2025-10-11 18:00:25&usuario_id:&usuario_nome:
+/controle_contas/index.php##&ip:kubernetes.docker.internal&horario:2025-10-11 20:21:42&usuario_id:&usuario_nome:Roseli Matos
+/controle_contas/processa/intermediarioPHP.php##&ip:kubernetes.docker.internal&horario:2025-10-11 21:06:55&usuario_id:&usuario_nome:Roseli Matos
