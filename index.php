@@ -141,14 +141,22 @@ $nomesMeses = array(
                                                 <tr>
                                                     <th>Nome</th>
                                                     <th>Pago</th>
-                                                    <th>Vencimento</th>
+                                                    <th>Comprov</th>
+                                                    <th>Vence</th>
                                                     <th>Ação</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($contasMes as $conta){ ?>
                                                     <tr>
-                                                        <td><?= strtoupper($conta['nome']) ?></td>
+                                                        <td>
+                                                            <?= strtoupper($conta['nome']) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= ($conta['caminho'] != "") 
+                                                            ? 'Sim' 
+                                                            : 'Nao' ?>
+                                                        </td>
                                                         <td>
                                                             <?php if ($conta['pago'] == 1): ?>
                                                                 <i class="bi bi-check-circle-fill text-success"></i>
