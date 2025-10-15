@@ -140,8 +140,8 @@ $nomesMeses = array(
                                             <thead>
                                                 <tr>
                                                     <th>Nome</th>
-                                                    <th>Pago</th>
                                                     <th>Comprov</th>
+                                                    <th>Pago</th>
                                                     <th>Vence</th>
                                                     <th>Ação</th>
                                                 </tr>
