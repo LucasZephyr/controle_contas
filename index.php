@@ -154,8 +154,8 @@ $nomesMeses = array(
                                                         </td>
                                                         <td>
                                                             <?= ($conta['caminho'] != "") 
-                                                            ? 'Sim' 
-                                                            : 'Nao' ?>
+                                                            ? '<span class="badge bg-success mx-1">Sim</span>' 
+                                                            : '<span class="badge bg-danger mx-1">Nao</span>' ?>
                                                         </td>
                                                         <td>
                                                             <?php if ($conta['pago'] == 1): ?>
