@@ -140,14 +140,20 @@ $nomesMeses = array(
                                             <thead>
                                                 <tr>
                                                     <th>Nome</th>
-                                                    <th>Comprov</th>
+                               ''                     <th>Comprov</th>
                                                     <th>Pago</th>
                                                     <th>Vence</th>
                                                     <th>Ação</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($contasMes as $conta){ ?>
+                                                <?php 
+                                                    foreach ($contasMes as $conta){ 
+                                                    if (strpos(strtoupper($conta['nome']), 'ACABOU') !== false) {
+                                                        continue;
+                                                    }
+
+                                                ?>
                                                     <tr>
                                                         <td>
                                                             <?= strtoupper($conta['nome']) ?>
