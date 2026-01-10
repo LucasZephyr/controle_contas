@@ -13,9 +13,9 @@ class Conexao{
                 if($_SERVER['HTTP_HOST'] != 'localhost'){
                     $dbHost = 'localhost'; 
                     $dbPort = '3306'; 
-                    $dbName = 'zephyr98_controle_contas';
-                    $dbUsername = 'zephyr98_root_contas'; 
-                    $dbPassword = '529440Lucas.'; 
+                    $dbName = '';
+                    $dbUsername = ''; 
+                    $dbPassword = ''; 
                 }else{
                     $dbHost = 'localhost'; 
                     $dbPort = '3306'; 
