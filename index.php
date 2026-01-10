@@ -1,31 +1,27 @@
 <?php
-
 ini_set('display_errors', 0);
 
 require 'includes/verificacaoLogado.php';
-
 require 'classes/sql.class.php';
 $sql = new SQL();
-#echo '<pre>';print_r($getDadoFeriasRelatorio);exit;
 
 $buscarContas = $sql->buscarContas();
-#echo '<pre>';print_r($buscarContas);echo '</pre>';exit;
 
-$dataAtual = date('Y-m-d');
-$mesAtual = date('m');
-$anoAtual = date('Y');
+$dataAtual = new DateTime('now');
+$mesAtual  = (int)$dataAtual->format('m');
+$anoAtual  = (int)$dataAtual->format('Y');
 
-$contasAgrupadas = array();
-
+$contasAgrupadas = [];
 foreach ($buscarContas as $conta) {
     $mes = (int)$conta['mes'];
     $ano = (int)$conta['ano'];
 
-    #se for um mes e ano futuro, pula...
+    #ignora meses futuros
     if ($ano > $anoAtual || ($ano == $anoAtual && $mes > $mesAtual)) {
         continue;
     }
-    $chave = $conta['mes'] . '-' . $conta['ano'];
+    #chave cronológica, logica correta: YYYY MM(ano emes)
+    $chave = ($ano * 100) + $mes;
     $contasAgrupadas[$chave][] = $conta;
 }
 krsort($contasAgrupadas);
@@ -125,10 +121,14 @@ $nomesMeses = array(
                 <div class="col-lg-12">
 
                     <?php foreach ($contasAgrupadas as $chave => $contasMes){
-                        list($mes, $ano) = explode('-', $chave);
-                        $titulo = (isset($nomesMeses[str_pad($mes, 2, '0', STR_PAD_LEFT)]) 
-                        ? $nomesMeses[str_pad($mes, 2, '0', STR_PAD_LEFT)] 
-                        : $mes) . " $ano";
+                        $ano = substr($chave, 0, 4);
+                        $mes = substr($chave, 4, 2);
+
+                        if (isset($nomesMeses[$mes])) {
+                            $titulo = $nomesMeses[$mes] . ' de ' . $ano;
+                        } else {
+                            $titulo = $mes . ' ' . $ano;
+                        }
 
                     ?>
                         <div class="row mb-4">

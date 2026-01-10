@@ -18,7 +18,8 @@ class SQL {
         if($_SERVER['HTTP_HOST'] != 'localhost'){
             $schema = 'zephyr98_controle_contas.';
         }else{
-            $schema = '';
+            $schema = 'zephyr98_controle_contas.';
+            #$schema = '';
         }
 
         $this->schema = $schema;
@@ -106,7 +107,15 @@ class SQL {
     function buscarContas(){
         $schema = $this->getSchema();
         $sql = "
-            SELECT * FROM {$schema}contas c where c.ativo = 1 ORDER BY c.vencimento ASC
+            SELECT 
+                * 
+            FROM {$schema}contas c 
+            where 
+            c.ativo = 1 
+                ORDER BY
+                    c.ano DESC,
+                    c.mes DESC,
+                    c.vencimento ASC
         ";
 
         #echo '<pre>';print_r($sql);echo '</pre>';exit;
@@ -139,15 +148,25 @@ class SQL {
     
     }
 
-    function buscarContasBase(){
+    function buscarContasBase() {
         $schema = $this->getSchema();
+
+        $data = new DateTime('now');
+        $data->modify('-1 month');
+
+        $mes = $data->format('m');
+        $ano = $data->format('Y');
+
         $sql = "
-            SELECT * FROM {$schema}contas c where c.ativo = 1 and c.mes = '09' and c.ano = '2025' ORDER BY c.vencimento ASC
+            SELECT *
+            FROM {$schema}contas c
+            WHERE c.ativo = 1
+            AND c.mes = '{$mes}'
+            AND c.ano = '{$ano}'
+            ORDER BY c.vencimento ASC
         ";
 
-        #echo '<pre>';print_r($sql);echo '</pre>';exit;
         return $this->executarQuery($sql);
-        
     }
 
 
