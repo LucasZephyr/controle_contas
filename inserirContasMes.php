@@ -1,189 +1,140 @@
 <?php
 require 'includes/verificacaoLogado.php';
+require 'classes/sql.class.php';
+$sql = new SQL();
 
+$dataAtual = new DateTime('now');
+$mesPadrao = (int)$dataAtual->format('m');
+$anoPadrao = (int)$dataAtual->format('Y');
+
+$nomesMeses = [
+    1 => 'Janeiro',  2 => 'Fevereiro', 3 => 'Março',
+    4 => 'Abril',    5 => 'Maio',      6 => 'Junho',
+    7 => 'Julho',    8 => 'Agosto',    9 => 'Setembro',
+    10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'
+];
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duplicar Contas</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-        .card {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: none;
-            border-radius: 10px;
-        }
-        .card-title {
-            color: #2c3e50;
-            font-weight: 600;
-        }
-        .form-label {
-            font-weight: 500;
-            color: #495057;
-        }
-        .btn-primary {
-            background-color: #3498db;
-            border-color: #3498db;
-            font-weight: 500;
-        }
-        .btn-primary:hover {
-            background-color: #2980b9;
-            border-color: #2980b9;
-        }
-        .info-box {
-            background-color: #e8f4fc;
-            border-left: 4px solid #3498db;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .month-selector {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .month-selector .month-name {
-            font-size: 14px;
-            margin-top: 5px;
-            color: #6c757d;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Gerar Mês - Controle de Contas</title>
+    <?php include 'includes/cabecalho.php' ?>
 </head>
 <body>
 
-    <?php include 'includes/cabecalho.php'; ?>
-    <?php include 'includes/navBar.php'; ?>
+    <?php include 'includes/navBar.php' ?>
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card mt-4">
-                    <div class="card-header bg-white">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-files me-2"></i>Duplicar Contas
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Gerar Contas do Mês</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.php">Início</a></li>
+                    <li class="breadcrumb-item active">Gerar Mês</li>
+                </ol>
+            </nav>
+        </div>
+
+        <hr>
+
+        <section class="section">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card shadow-sm">
+                        <h5 class="card-header bg-light fw-bold">
+                            <i class="bi bi-calendar-plus me-2"></i>Gerar Contas para um Mês
                         </h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="text-muted mb-4">
-                            Selecione o mês e ano de referência para duplicar as contas do período anterior.
-                        </p>
-                        
-                        <form id="formDuplicarContas">
+                        <div class="card-body">
+
+                            <p class="text-muted mb-4">
+                                Selecione o mês e ano desejado. O sistema irá copiar automaticamente
+                                todas as contas recorrentes do mês anterior mais recente.
+                            </p>
+
                             <div class="row align-items-end g-3">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <label for="mes" class="form-label">Mês</label>
-                                    <div class="month-selector">
-                                        <input type="range" class="form-range" id="mesRange" min="1" max="12" value="1">
-                                        <div class="month-name" id="monthName">Janeiro</div>
-                                    </div>
-                                    <input type="number" class="form-control mt-2" id="mes" name="mes" min="1" max="12" value="1" required>
+                                    <select class="form-select" id="mes" name="mes">
+                                        <?php foreach ($nomesMeses as $num => $nome): ?>
+                                            <option value="<?= $num ?>" <?= $num === $mesPadrao ? 'selected' : '' ?>>
+                                                <?= $nome ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
+
                                 <div class="col-md-4">
                                     <label for="ano" class="form-label">Ano</label>
-                                    <input type="number" class="form-control" id="ano" name="ano" value="2023" required>
+                                    <input type="number" class="form-control" id="ano" name="ano"
+                                           value="<?= $anoPadrao ?>" min="2020" max="2099" required>
                                 </div>
-                                <div class="col-md-4">
-                                    <button type="button" class="btn btn-primary btn-sm w-100 py-2" onclick="duplicarContas();">
-                                        <i class="bi bi-files me-2"></i> Duplicar Contas
+
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary w-100" onclick="gerarMes();">
+                                        <i class="bi bi-calendar-check me-1"></i> Gerar
                                     </button>
                                 </div>
                             </div>
-                        </form>
-                        
-                        <div class="info-box">
-                            <h6><i class="bi bi-info-circle me-2"></i>Como funciona?</h6>
-                            <p class="mb-0">
-                                Esta função irá copiar todas as contas do mês anterior para o mês e ano selecionados. 
-                                As contas duplicadas manterão as mesmas categorias e valores, mas poderão ser editadas posteriormente.
-                            </p>
+
+                            <div class="alert alert-info mt-4 mb-0">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>Como funciona:</strong> Ao abrir a página inicial, o mês atual já é
+                                gerado automaticamente. Use esta tela apenas para gerar meses anteriores
+                                ou futuros que ainda não possuam contas.
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
+    </main>
+
+    <?php include 'includes/rodape.php' ?>
+
     <script>
-        const monthNames = [
-            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-        ];
-        
-        document.getElementById('mesRange').addEventListener('input', function() {
-            const monthValue = this.value;
-            document.getElementById('mes').value = monthValue;
-            document.getElementById('monthName').textContent = monthNames[monthValue - 1];
-        });
-        
-        document.getElementById('mes').addEventListener('input', function() {
-            const monthValue = this.value;
-            document.getElementById('mesRange').value = monthValue;
-            document.getElementById('monthName').textContent = monthNames[monthValue - 1];
-        });
-
-        document.getElementById('ano').value = new Date().getFullYear();
-        
-        
-        function duplicarContas() {
-            const mes = $('#mes').val();
-            const ano = $('#ano').val();
-
-            if (!mes || !ano) {
-                Swal.fire('Atenção', 'Informe o mês e o ano para duplicar as contas.', 'warning');
-                return;
-            }
+        function gerarMes() {
+            var mes = document.getElementById('mes').value;
+            var ano = document.getElementById('ano').value;
+            var nomesMeses = [
+                '', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+            ];
 
             Swal.fire({
                 icon: 'question',
-                title: 'Confirmar duplicação?',
-                text: `As contas serão duplicadas para ${mes}/${ano}.`,
+                title: 'Confirmar geração?',
+                text: 'As contas recorrentes serão criadas para ' + nomesMeses[parseInt(mes)] + ' de ' + ano + '.',
                 showCancelButton: true,
-                confirmButtonText: 'Sim, duplicar',
+                confirmButtonText: 'Sim, gerar',
                 cancelButtonText: 'Cancelar'
-
-            }).then((result) => {
-
+            }).then(function(result) {
                 if (result.isConfirmed) {
-
                     $.ajax({
                         url: 'processa/duplicar_contas.php',
                         type: 'POST',
                         dataType: 'json',
                         data: { mes: mes, ano: ano },
                         success: function(resp) {
-                        if (resp.sucesso) {
-                            Swal.fire('Sucesso!', 'As contas foram duplicadas com sucesso.', 'success').then(() => {
-                            document.location.reload(true);
-                            });
-                        } else {
-                            Swal.fire('Erro', resp.mensagem || 'Não foi possível duplicar as contas.', 'error');
-                        }
+                            if (resp.sucesso) {
+                                Swal.fire('Sucesso!', 'Contas geradas com sucesso.', 'success')
+                                    .then(function() { window.location.href = 'index.php'; });
+                            } else {
+                                Swal.fire('Aviso', resp.mensagem || 'Não foi possível gerar as contas.', 'warning');
+                            }
                         },
                         error: function() {
-                        Swal.fire('Erro', 'Falha na comunicação com o servidor.', 'error');
+                            Swal.fire('Erro', 'Falha na comunicação com o servidor.', 'error');
                         }
                     });
-
                 }
-
             });
-            
         }
-
     </script>
+
 </body>
 </html>

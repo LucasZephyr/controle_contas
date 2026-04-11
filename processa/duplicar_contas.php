@@ -1,36 +1,29 @@
 <?php
 
 require '../includes/verificacaoLogado.php';
-
 require '../classes/sql.class.php';
 $sql = new SQL();
 
-$buscarContasBase = $sql->buscarContasBase();
+$mes = filter_input(INPUT_POST, 'mes', FILTER_SANITIZE_NUMBER_INT);
+$ano = filter_input(INPUT_POST, 'ano', FILTER_SANITIZE_NUMBER_INT);
 
-$insert = "INSERT INTO contas (nome, pago, vencimento, caminho, ativo, mes, ano) VALUES\n";
-
-$valores = array();
-foreach ($buscarContasBase as $conta) {
-    $caminho = 'null';
-    
-    $linha = "(" .
-             "'" . $conta['nome'] . "', " .
-             "'" . '' . "', " .
-             $conta['vencimento'] . ", " .
-             $caminho . ", " .
-             "'" . $conta['ativo'] . "', " .
-             "'" . $_REQUEST['mes'] . "', " .
-             "'" . $_REQUEST['ano'] . "')";
-    
-    $valores[] = $linha;
+if (empty($mes) || empty($ano)) {
+    echo json_encode(['sucesso' => false, 'mensagem' => 'Mês e ano são obrigatórios.']);
+    exit;
 }
 
-$insert .= implode(",\n", $valores) . ";";
+if ($sql->verificarMesExiste($mes, $ano)) {
+    echo json_encode(['sucesso' => false, 'mensagem' => 'O mês selecionado já possui contas cadastradas.']);
+    exit;
+}
 
-$executar = $sql->executarQueryBoleano($insert);
+$result = $sql->gerarMesAutomatico($mes, $ano);
 
-if($executar['informacao'] == "SUCESSO"){
+if ($result['informacao'] === 'SUCESSO') {
     echo json_encode(['sucesso' => true]);
-}else{
-    echo json_encode(['sucesso' => false]);
+} else {
+    echo json_encode([
+        'sucesso'  => false,
+        'mensagem' => isset($result['mensagem']) ? $result['mensagem'] : 'Erro ao gerar contas.'
+    ]);
 }
