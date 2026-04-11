@@ -19,13 +19,6 @@ class Conexao
                     $dbUsername = '';
                     $dbPassword = '';
                 } else {
-
-
-                    $dbHost = '192.185.213.15';
-                    $dbPort = '3306';
-                    $dbName = 'zephyr98_controle_contas';
-                    $dbUsername = 'zephyr98_root_contas';
-                    $dbPassword = '529440Lucas.';
                 }
 
 
