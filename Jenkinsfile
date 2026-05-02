@@ -78,9 +78,9 @@ pipeline {
                     keyFileVariable: 'SSH_KEY',
                     usernameVariable: 'SSH_USERNAME'
                 )]) {
-                    powershell """
-                        icacls "\$env:SSH_KEY" /inheritance:r
-                        icacls "\$env:SSH_KEY" /grant:r "\$env:USERNAME:R"
+                    bat """
+                        icacls "%SSH_KEY%" /inheritance:r
+                        icacls "%SSH_KEY%" /grant:r "%USERNAME%:R"
                     """
                     bat """
                         scp -o StrictHostKeyChecking=no -P 2222 -i "%SSH_KEY%" ^
