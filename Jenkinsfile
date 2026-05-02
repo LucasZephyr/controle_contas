@@ -73,15 +73,19 @@ pipeline {
         stage('6 - Deploy na Hostgator') {
             steps {
                 echo '🌐 Fazendo deploy na Hostgator...'
-                sshagent(['hostgator-ssh']) {
+                withCredentials([sshUserPrivateKey(
+                    credentialsId: 'hostgator-ssh',
+                    keyFileVariable: 'SSH_KEY',
+                    usernameVariable: 'SSH_USERNAME'
+                )]) {
                     bat """
-                        scp -o StrictHostKeyChecking=no -P 22 ^
+                        scp -o StrictHostKeyChecking=no -P 2222 -i "%SSH_KEY%" ^
                         ${PROJECT_NAME}.zip ^
-                        ${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/
+                        %SSH_USERNAME%@${SSH_HOST}:${DEPLOY_PATH}/
                     """
                     bat """
-                        ssh -o StrictHostKeyChecking=no -p 22 ^
-                        ${SSH_USER}@${SSH_HOST} ^
+                        ssh -o StrictHostKeyChecking=no -p 2222 -i "%SSH_KEY%" ^
+                        %SSH_USERNAME%@${SSH_HOST} ^
                         "cd ${DEPLOY_PATH} && unzip -o ${PROJECT_NAME}.zip && rm ${PROJECT_NAME}.zip"
                     """
                 }
