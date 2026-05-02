@@ -80,7 +80,7 @@ pipeline {
                 )]) {
                     bat """
                         icacls "%SSH_KEY%" /inheritance:r
-                        icacls "%SSH_KEY%" /grant:r "%USERNAME%:R"
+                        icacls "%SSH_KEY%" /grant:r "NT AUTHORITY\\SYSTEM:R"
                     """
                     bat """
                         scp -o StrictHostKeyChecking=no -P 2222 -i "%SSH_KEY%" ^
