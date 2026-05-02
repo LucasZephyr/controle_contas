@@ -73,32 +73,7 @@ pipeline {
             }
         }
 
-        stage('6 - Deploy na Hostgator') {
-            steps {
-                echo '🌐 Fazendo deploy na Hostgator...'
-                withCredentials([sshUserPrivateKey(
-                    credentialsId: 'hostgator-ssh',
-                    keyFileVariable: 'SSH_KEY',
-                    usernameVariable: 'SSH_USERNAME'
-                )]) {
-                    bat """
-                        icacls "%SSH_KEY%" /inheritance:r
-                        icacls "%SSH_KEY%" /grant:r "NT AUTHORITY\\SYSTEM:R"
-                    """
-                    bat """
-                        scp -o StrictHostKeyChecking=no -P 2222 -i "%SSH_KEY%" ^
-                        ${PROJECT_NAME}.zip ^
-                        %SSH_USERNAME%@${SSH_HOST}:${DEPLOY_PATH}/
-                    """
-                    bat """
-                        ssh -o StrictHostKeyChecking=no -p 2222 -i "%SSH_KEY%" ^
-                        %SSH_USERNAME%@${SSH_HOST} ^
-                        "cd ${DEPLOY_PATH} && unzip -o ${PROJECT_NAME}.zip && rm ${PROJECT_NAME}.zip"
-                    """
-                }
-                echo "✅ Deploy ${BUILD_NUMBER} realizado com sucesso!"
-            }
-        }
+        // stage('6 - Deploy na Hostgator') — temporariamente desabilitado
 
     }
 
