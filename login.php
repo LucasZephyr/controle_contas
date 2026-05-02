@@ -14,6 +14,7 @@ $infoSistema = infoSistema();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -66,6 +67,7 @@ $infoSistema = infoSistema();
         }
     </style>
 </head>
+
 <body>
 
     <!-- cabecalho -->
@@ -82,13 +84,13 @@ $infoSistema = infoSistema();
 
             <form action="processa/processa_login.php" method="post" id="formLogin">
                 <input type="password" id="senha" name="senha"
-                       class="form-control text-center bg-warning-subtle mb-4"
-                       placeholder="Senha" required>
+                    class="form-control text-center bg-warning-subtle mb-4"
+                    placeholder="Senha" required>
 
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
                 <button type="submit" class="btn btn-primary w-100">
-                    <i class="bi bi-door-open"></i> Entrar
+                    <i class="bi bi-door-open"></i> Login
                 </button>
 
                 <select name="acao" id="acao" class="form-select form-select-sm mt-3">
@@ -96,16 +98,16 @@ $infoSistema = infoSistema();
                     <option value="duplicar">Duplicar</option>
                 </select>
 
-                <?php if ($erro == 2){ ?>
+                <?php if ($erro == 2) { ?>
                     <p class="text-danger mt-4 mb-0">Login inválido</p>
-                <?php }elseif ($erro == 3){ ?>
+                <?php } elseif ($erro == 3) { ?>
                     <p class="text-danger mt-4 mb-0">
                         Login bloqueado por questões de segurança.<br>
                         Aguarde 30 minutos para tentar novamente!
                     </p>
                 <?php } ?>
 
-                <?php if (!empty($infoSistema['descricao'])){ ?>
+                <?php if (!empty($infoSistema['descricao'])) { ?>
                     <p class="text-muted mt-4"><?= htmlspecialchars($infoSistema['descricao']) ?></p>
                 <?php } ?>
             </form>
@@ -129,4 +131,5 @@ $infoSistema = infoSistema();
     </script>
 
 </body>
+
 </html>
