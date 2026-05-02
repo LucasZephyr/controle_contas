@@ -48,7 +48,10 @@ pipeline {
             steps {
                 echo '📦 Empacotando projeto...'
                 bat """
-                    powershell Compress-Archive -Path * -DestinationPath ${PROJECT_NAME}.zip -Force
+                    powershell Compress-Archive -Path * -DestinationPath ${PROJECT_NAME}_full.zip -Force
+                    powershell Compress-Archive ^
+                    -Path index.php,login.php,logout.php,inserirContasMes.php,classes,includes,processa ^
+                    -DestinationPath ${PROJECT_NAME}.zip -Force
                 """
             }
         }
