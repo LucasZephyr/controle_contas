@@ -29,7 +29,7 @@ pipeline {
                         -Dsonar.projectKey=${SONAR_PROJECT} ^
                         -Dsonar.projectName=${SONAR_PROJECT} ^
                         -Dsonar.sources=. ^
-                        -Dsonar.exclusions=assets/**,uploads/**,vendor/**
+                        -Dsonar.exclusions=assets/**,uploads/**,vendor/**,**/*.css,**/*.min.js
                     """
                 }
             }
