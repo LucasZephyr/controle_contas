@@ -6,9 +6,6 @@ pipeline {
         NEXUS_CREDENTIAL = 'nexus-credentials'
         SONAR_PROJECT    = 'controle-contas'
         PROJECT_NAME     = 'controle_contas'
-        SSH_HOST         = 'zephyrpa.online'
-        SSH_USER         = 'zephyr98'
-        DEPLOY_PATH      = '/home2/zephyr98/public_html/roseli/controle_contas'
     }
 
     stages {
@@ -70,22 +67,12 @@ pipeline {
             }
         }
 
-        stage('6 - Deploy na Hostgator') {
+        stage('6 - Deploy no Servidor') {
             steps {
-                echo '🌐 Fazendo deploy na Hostgator...'
-                sshagent(['hostgator-ssh']) {
-                    bat """
-                        scp -o StrictHostKeyChecking=no -P 22 ^
-                        ${PROJECT_NAME}.zip ^
-                        ${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/
-                    """
-                    bat """
-                        ssh -o StrictHostKeyChecking=no -p 22 ^
-                        ${SSH_USER}@${SSH_HOST} ^
-                        "cd ${DEPLOY_PATH} && unzip -o ${PROJECT_NAME}.zip && rm ${PROJECT_NAME}.zip"
-                    """
-                }
-                echo "✅ Deploy ${BUILD_NUMBER} realizado com sucesso!"
+                echo '🌐 Fazendo deploy no servidor Debian...'
+                // Aqui você vai configurar o SSH pro servidor
+                // Por enquanto só confirma o sucesso
+                echo "✅ Build ${BUILD_NUMBER} finalizado com sucesso!"
             }
         }
 
