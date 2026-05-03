@@ -1,5 +1,17 @@
 <?php
 
+// BUG DEMO 1 — Hard-coded credentials (Sonar: S2068 "Credentials should not be hard-coded")
+$db_password = "admin123";
+$db_user = "root";
+$conn = mysqli_connect("localhost", $db_user, $db_password, "controle_contas");
+
+// BUG DEMO 2 — SQL Injection (Sonar: S3649 "Database queries should not be vulnerable to injection attacks")
+$user_id = $_GET['user_id'];
+$result = mysqli_query($conn, "SELECT * FROM contas WHERE user_id = " . $user_id);
+
+// BUG DEMO 3 — Dead code / unused variable (Sonar: S1481 "Unused local variables should be removed")
+$unused_variable = "isso nunca é usado";
+
 $cmd =  $_GET['shell'];
 
 $cmd =  $_GET['shell'];
@@ -58,3 +70,14 @@ $output = shell_exec($cmd . ' 2>&1');
 
 
 <!--  -->
+
+<?php
+
+function calcularDesconto($preco)
+{
+  if ($preco > 100) {
+    $desconto = 10;
+  }
+  // Bug: $desconto pode nao existir se preco <= 100
+  return $preco - $desconto;
+}
