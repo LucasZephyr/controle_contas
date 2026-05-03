@@ -1,23 +1,23 @@
 <?php
 
-require_once("conexao.class.php");
+require_once "conexao.class.php";
 
 class SQL {
 
     private $conexao;
-    var $schema = '';
+    public $schema = '';
 
     public function __construct() {
         $oConexao = new Conexao();
         $this->conexao = $oConexao->getConexao();
-        $this->setSchema($_SERVER['HTTP_HOST']);
+        $this->setSchema();
     }
 
-    function setSchema($host) {
+    public function setSchema() {
         $this->schema = 'zephyr98_controle_contas.';
     }
 
-    function getSchema() {
+    public function getSchema() {
         return $this->schema;
     }
 
@@ -47,7 +47,7 @@ class SQL {
 
     // ---- CONTAS ----
 
-    function buscarContas() {
+    public function buscarContas() {
         $schema = $this->getSchema();
         $sql = "
             SELECT * FROM {$schema}contas c
@@ -59,13 +59,13 @@ class SQL {
         return $this->executar($sql);
     }
 
-    function buscarContaPorId($idConta) {
+    public function buscarContaPorId($idConta) {
         $schema = $this->getSchema();
         $sql = "SELECT * FROM {$schema}contas WHERE serial = ? AND ativo = '1'";
         return $this->executar($sql, [(int)$idConta]);
     }
 
-    function inserirContas($nomeConta, $dataVencimento, $mes, $ano, $recorrente = '1') {
+    public function inserirContas($nomeConta, $dataVencimento, $mes, $ano, $recorrente = '1') {
         $schema = $this->getSchema();
         $sql = "
             INSERT INTO {$schema}contas (nome, pago, vencimento, caminho, ativo, mes, ano, recorrente)
@@ -80,7 +80,7 @@ class SQL {
         ]);
     }
 
-    function atualizarPagoConta($idConta) {
+    public function atualizarPagoConta($idConta) {
         $schema = $this->getSchema();
         $sql = "UPDATE {$schema}contas SET pago = '1' WHERE serial = ?";
         return $this->executarEscrita($sql, [(int)$idConta]);
@@ -90,7 +90,7 @@ class SQL {
      * Atualiza dados de uma conta.
      * Se $novoCaminho for null, o campo caminho NÃO é alterado (preserva comprovante existente).
      */
-    function atualizarConta($id, $nome, $vencimento, $pago, $recorrente, $novoCaminho = null) {
+    public function atualizarConta($id, $nome, $vencimento, $pago, $recorrente, $novoCaminho = null) {
         $schema = $this->getSchema();
 
         if ($novoCaminho !== null) {
@@ -121,7 +121,7 @@ class SQL {
     /**
      * Verifica se já existem contas cadastradas para o mês/ano informados.
      */
-    function verificarMesExiste($mes, $ano) {
+    public function verificarMesExiste($mes, $ano) {
         $schema = $this->getSchema();
         $sql = "
             SELECT COUNT(*) as total FROM {$schema}contas
@@ -142,7 +142,7 @@ class SQL {
      * 2. Copia as contas marcadas como recorrente = '1'
      * 3. Se não houver nenhuma recorrente (banco sem migração), copia todas
      */
-    function gerarMesAutomatico($mesDest, $anoDest) {
+    public function gerarMesAutomatico($mesDest, $anoDest) {
         $schema = $this->getSchema();
         $mesDestInt = (int)$mesDest;
         $anoDestInt = (int)$anoDest;
@@ -242,7 +242,7 @@ class SQL {
     }
 
     /** @deprecated Mantido para não quebrar inserirContasMes.php antigo */
-    function buscarContasBase() {
+    public function buscarContasBase() {
         $schema = $this->getSchema();
         $data = new DateTime('now');
         $data->modify('-1 month');
@@ -256,4 +256,3 @@ class SQL {
         return $this->executar($sql, [$mes, $ano]);
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
-require 'includes/verificacaoLogado.php';
-require 'classes/sql.class.php';
+require_once 'includes/verificacaoLogado.php';
+require_once 'classes/sql.class.php';
 $sql = new SQL();
 
 $dataAtual = new DateTime('now');
@@ -20,11 +20,11 @@ $nomesMeses = [
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Gerar Mês - Controle de Contas</title>
-    <?php include 'includes/cabecalho.php' ?>
+    <?php include_once 'includes/cabecalho.php' ?>
 </head>
 <body>
 
-    <?php include 'includes/navBar.php' ?>
+    <?php include_once 'includes/navBar.php' ?>
 
     <main id="main" class="main">
 
@@ -94,7 +94,7 @@ $nomesMeses = [
 
     </main>
 
-    <?php include 'includes/rodape.php' ?>
+    <?php include_once 'includes/rodape.php' ?>
 
     <script>
         function gerarMes() {

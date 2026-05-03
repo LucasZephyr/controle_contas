@@ -1,9 +1,6 @@
 <?php
 
-// ini_set('display_errors', 1);
-// error_reporting(E_ALL);
-
-require 'includes/funcoes.php';
+require_once 'includes/funcoes.php';
 
 iniciarSessao();
 redirecionarSeLogado();
@@ -21,7 +18,7 @@ $infoSistema = infoSistema();
     <title><?= htmlspecialchars($infoSistema['nomeSistema']) ?></title>
 
     <!-- Bootstrap e ícones -->
-    <?php include 'includes/cabecalho.php'; ?>
+    <?php include_once 'includes/cabecalho.php'; ?>
 
     <style>
         body {

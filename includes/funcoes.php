@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 function iniciarSessao($tempo = 7200) {
     session_set_cookie_params($tempo);

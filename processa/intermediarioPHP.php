@@ -1,10 +1,7 @@
 <?php
 
-// ini_set('display_errors', 1);
-// error_reporting(E_ALL);
-
-require '../includes/verificacaoLogado.php';
-require '../classes/sql.class.php';
+require_once '../includes/verificacaoLogado.php';
+require_once '../classes/sql.class.php';
 $sql = new SQL();
 
 $acao = isset($_POST['acao']) ? $_POST['acao'] : '';

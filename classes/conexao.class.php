@@ -10,46 +10,47 @@ class Conexao
     {
         $this->carregarEnv(dirname(__DIR__) . '/.env');
 
-        switch ($servidor) {
-            case "Producao":
+        if ($servidor === "Producao") {
+            if ($_SERVER['HTTP_HOST'] != 'localhost') {
+                $dbHost     = getenv('PROD_DB_HOST');
+                $dbPort     = getenv('PROD_DB_PORT');
+                $dbName     = getenv('PROD_DB_NAME');
+                $dbUsername = getenv('PROD_DB_USERNAME');
+                $dbPassword = getenv('PROD_DB_PASSWORD');
+            } else {
+                $dbHost     = getenv('LOCAL_DB_HOST');
+                $dbPort     = getenv('LOCAL_DB_PORT');
+                $dbName     = getenv('LOCAL_DB_NAME');
+                $dbUsername = getenv('LOCAL_DB_USERNAME');
+                $dbPassword = getenv('LOCAL_DB_PASSWORD');
+            }
 
-                if ($_SERVER['HTTP_HOST'] != 'localhost') {
-                    $dbHost     = getenv('PROD_DB_HOST');
-                    $dbPort     = getenv('PROD_DB_PORT');
-                    $dbName     = getenv('PROD_DB_NAME');
-                    $dbUsername = getenv('PROD_DB_USERNAME');
-                    $dbPassword = getenv('PROD_DB_PASSWORD');
-                } else {
-                    $dbHost     = getenv('LOCAL_DB_HOST');
-                    $dbPort     = getenv('LOCAL_DB_PORT');
-                    $dbName     = getenv('LOCAL_DB_NAME');
-                    $dbUsername = getenv('LOCAL_DB_USERNAME');
-                    $dbPassword = getenv('LOCAL_DB_PASSWORD');
-                }
-
-                try {
-                    $this->conexao = new PDO("mysql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUsername, $dbPassword);
-                    $this->conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                } catch (PDOException $e) {
-                    echo "Connection failed: " . $e->getMessage();
-                    exit();
-                }
-                break;
-
-            default:
-                die("ERRO: Servidor $servidor inexistente!");
-                break;
+            try {
+                $this->conexao = new PDO("mysql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUsername, $dbPassword);
+                $this->conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                echo "Connection failed: " . $e->getMessage();
+                exit();
+            }
+        } else {
+            die("ERRO: Servidor $servidor inexistente!");
         }
     }
 
     private function carregarEnv($path)
     {
-        if (!file_exists($path)) return;
+        if (!file_exists($path)) {
+            return;
+        }
 
         $linhas = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($linhas as $linha) {
-            if (str_starts_with(trim($linha), '#')) continue;
-            if (!str_contains($linha, '=')) continue;
+            if (str_starts_with(trim($linha), '#')) {
+                continue;
+            }
+            if (!str_contains($linha, '=')) {
+                continue;
+            }
 
             [$chave, $valor] = explode('=', $linha, 2);
             $chave = trim($chave);
