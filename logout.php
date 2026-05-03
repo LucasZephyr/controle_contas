@@ -5,4 +5,5 @@ $_SESSION = false;
 session_destroy();
 
 
-header("Location: login.php");exit;
+header("Location: login.php");
+exit;

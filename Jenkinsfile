@@ -44,7 +44,28 @@ pipeline {
             }
         }
 
-        stage('4 - Empacotar Projeto') {
+        stage('4 - Análise Semgrep') {
+            steps {
+                echo '🔐 Analisando segurança com Semgrep...'
+                bat """
+                    semgrep --config "p/php" ^
+                    --output semgrep-report.json ^
+                    --json ^
+                    --error ^
+                    .
+                """
+            }
+            post {
+                always {
+                    echo '📋 Relatório Semgrep gerado: semgrep-report.json'
+                }
+                failure {
+                    echo '🚨 Semgrep encontrou problemas de segurança! Verifique o relatório.'
+                }
+            }
+        }
+
+        stage('5 - Empacotar Projeto') {
             steps {
                 echo '📦 Empacotando projeto...'
                 bat """
@@ -56,7 +77,7 @@ pipeline {
             }
         }
 
-        stage('5 - Enviar para Nexus') {
+        stage('6 - Enviar para Nexus') {
             steps {
                 echo '🚀 Enviando artefato para o Nexus...'
                 withCredentials([usernamePassword(
@@ -73,7 +94,7 @@ pipeline {
             }
         }
 
-        // stage('6 - Deploy na Hostgator') — temporariamente desabilitado
+        // stage('7 - Deploy na Hostgator') — temporariamente desabilitado
 
     }
 
@@ -83,6 +104,9 @@ pipeline {
         }
         failure {
             echo '❌ Pipeline falhou! Verifique os logs acima.'
+        }
+        always {
+            archiveArtifacts artifacts: 'semgrep-report.json', allowEmptyArchive: true
         }
     }
 }
