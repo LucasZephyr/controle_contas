@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+define('REDIRECT_LOGIN', 'Location: ../login.php');
+
 $senhaCorreta   = '529440';
 $tempoBloqueio  = 1800; // 30 minutos
 $maxTentativas  = 5;
@@ -15,7 +17,7 @@ function gerarTokenCSRF() {
 
 if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
     $_SESSION['erro'] = 1;
-    header("Location: ../login.php");
+    header(REDIRECT_LOGIN);
     exit;
 }
 
@@ -30,7 +32,7 @@ if ($_SESSION['tentativas_login'] >= $maxTentativas) {
     $tempoRestante = time() - $_SESSION['ultimo_login_falho'];
     if ($tempoRestante < $tempoBloqueio) {
         $_SESSION['erro'] = 3;
-        header("Location: ../login.php");
+        header(REDIRECT_LOGIN);
         exit;
     } else {
         $_SESSION['tentativas_login'] = 0;
@@ -61,7 +63,6 @@ if ($senha === $senhaCorreta) {
     $_SESSION['ultimo_login_falho'] = time();
     $_SESSION['erro'] = 2;
 
-    header("Location: ../login.php");
+    header(REDIRECT_LOGIN);
     exit;
 }
-?>

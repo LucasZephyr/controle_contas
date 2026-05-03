@@ -1,7 +1,7 @@
 <?php
 
-require '../includes/verificacaoLogado.php';
-require '../classes/sql.class.php';
+require_once '../includes/verificacaoLogado.php';
+require_once '../classes/sql.class.php';
 $sql = new SQL();
 
 $mes = filter_input(INPUT_POST, 'mes', FILTER_SANITIZE_NUMBER_INT);
